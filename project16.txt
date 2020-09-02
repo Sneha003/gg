@@ -1,0 +1,126 @@
+
+
+var PLAY = 1;
+var END = 0;
+var gameState=PLAY;
+
+var monkey=createSprite(200,335,5,10);
+monkey.setAnimation("monkey");
+monkey.scale=0.1;
+
+
+
+var ObstaclesGroup = createGroup();
+var bananaGroup = createGroup();
+
+
+var ground = createSprite(100,380,400,5);
+ground.shapeColor="black";
+ground.x = ground.width /2;
+
+
+var invisibleground=createSprite(200,385,400,5);
+invisibleground.visible=false;
+
+var count=0;
+
+function draw() {
+  
+  background("lightgreen");
+  text("lifetime: "+ count, 250, 100);
+  
+  if(gameState===PLAY){
+    
+   
+
+ if(ObstaclesGroup.isTouching(monkey)){
+   ObstaclesGroup.destroyEach();
+   
+ }
+ if(bananaGroup.isTouching(monkey)){
+   bananaGroup.destroyEach();
+   count=count+2;
+   
+   
+ }
+  
+ if(keyDown("space")&&monkey.y>=335) {   
+ monkey.velocityY=-20;
+ 
+  if (ground.x < 0){
+     ground.x = ground.width/2;
+  }
+   
+ 
+    
+   
+ 
+ }  
+  }
+
+    monkey.velocityY = monkey.velocityY + 0.8;
+
+ monkey.collide(invisibleground);
+ 
+ if(gameState===END){
+   
+   if(ObstaclesGroup.isTouching(monkey))
+monkey.destroyEach();
+ObstaclesGroup.destroyEach();
+
+   
+   
+ } 
+
+
+drawSprites();
+createObstacles();
+createbanana();
+
+} 
+function createObstacles(){
+  
+  if(World.frameCount % 60 === 0) {
+    var obstacle = createSprite(400,365,10,40);
+    obstacle.velocityX = - (6 + 3*count/100);
+    
+    //generate random obstacles
+    
+    obstacle.setAnimation("Stone");
+    
+    //assign scale and lifetime to the obstacle           
+    obstacle.scale = 0.5;
+    obstacle.lifetime = 70;
+    //add each obstacle to the group
+    ObstaclesGroup.add(obstacle);
+    
+     obstacle.depth = monkey.depth;
+    monkey.depth = monkey.depth + 1;
+    
+  }
+}
+  
+ function createbanana() {
+  //write code here to spawn the clouds
+  if (World.frameCount % 80 === 0) {
+    var banana = createSprite(400,320,10,30);
+    banana.y = randomNumber(120,200);
+     banana.setAnimation("Banana");
+     banana.scale = 0.1;
+     banana.velocityX = -3;
+    
+     //assign lifetime to the variable
+     banana.lifetime = 134;
+    
+    //adjust the depth
+     banana.depth = monkey.depth;
+    monkey.depth = monkey.depth + 1;
+    
+    //add each cloud to the group
+     bananaGroup.add(banana);
+  }
+  
+}
+
+ 
+  
